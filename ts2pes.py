@@ -10,11 +10,17 @@ def main():
         if packet[0] != 0x47: # something has gone horribly wrong
             print("packet without sync byte. Aborting")
             sys.exit()
-        TEI = (packet[1] >> 3) & 1
-        PUSI = (packet[1] >> 2) & 1
-        TransportPriority = (packet[1] >> 1) & 1
+        #TEI = (packet[1] >> 3) & 1
+        #PUSI = (packet[1] >> 2) & 1
+        #TransportPriority = (packet[1] >> 1) & 1
         
-        output.write(packet[4:0xbc])
+        #TSC = (packet[3] >> 6) & 3
+        Adaption = (packet[3] >> 4) & 3
+        
+        if Adaption == 1:
+            output.write(packet[4:0xbc])
+        elif Adaption == 3:
+            output.write(packet[5+packet[4]:0xbc])
 
 if __name__ == "__main__":
     main()
